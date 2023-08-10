@@ -21,9 +21,7 @@ const validateJWT = async(  req = request, res = response, next) => {
                 msg: 'No hay camper?'
             })
         }         
-        console.log(camper);
         req.camper = camper; 
-        console.log(req.camper);
         next();
 
     } catch (error) {

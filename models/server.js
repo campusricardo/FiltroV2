@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const {connectToDB} = require('../database/config.js');
 
 
@@ -12,12 +13,12 @@ class Server {
         this.port = process.env.PORT;
 
         this.paths = {
-            camper: '/camper',
-            centro: '/centro',
-            ruta: '/ruta',
-            level: '/level',
-            role: '/role',
-            login: '/login',
+            camper: '/api/campers',
+            centro: '/api/centro',
+            ruta: '/api/ruta',
+            level: '/api/level',
+            role: '/api/roles',
+            login: '/api/login',
 
         }
 
@@ -34,8 +35,12 @@ class Server {
     middlewares() {
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(express.static('public'));
+    this.app.use(fileUpload({
+        useTempFiles: true,
+        tempFileDir: '/tmp/'
+    }));
 
-     
     }
 
     routes() {

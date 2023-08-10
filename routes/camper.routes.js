@@ -21,7 +21,6 @@ router.post("/",[
     check('password', 'El password es obligatorio').not().isEmpty(),
     check('level', 'The level must be a MongoId').isMongoId(),
     check('levelState', 'The levelState must be a Boolean').isBoolean(),
-    check('imagen').not().isEmpty(),
     check('rol').custom(isValidRole),
     validateDocuments,
 ] , postCamper);
