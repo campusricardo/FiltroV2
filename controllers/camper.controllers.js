@@ -2,7 +2,8 @@ const { isValidObjectId } = require('mongoose');
 const Camper = require('../models/camper.js');
 const { ObjectId } = require('mongoose').Types;
 const bcrypt = require('bcryptjs');
-
+const path =  require('path');
+const { response } = require('express');
 const getCamper = async(req,res) => {
       
 
@@ -13,26 +14,29 @@ const getCamper = async(req,res) => {
     
 }
 
-const postCamper = async(req,res) => {
+const postCamper = async(req,res = response) => {
     const {nombre, tipoIdentificacion, NroIdentificacion, email, password, level, levelState, estado, imagen, rol, promedio} = req.body;
+    console.log(req.files);
+    console.log(req.body);
+
     const error = {};
 try {
 
 
     const data = {
-        nombre: typeof nombre == 'string'? nombre: error.nombre = 'Type of nombre is wrong',
-        tipoIdentificacion: typeof tipoIdentificacion == 'boolean'? tipoIdentificacion: error.tipoIdentificacion = 'Type of identification is not a boolean',
-        NroIdentificacion: typeof NroIdentificacion == 'number' ? NroIdentificacion : error.NroIdentificacion = 'The id type is incorrect',
-        email: typeof email == 'string' ? email: error.email = 'The email type is wrong',
-        password: typeof password == 'string' ? password: error.password = 'The password type is wrong',
-        level: isValidObjectId(level) ? new ObjectId(level) : error.level = "The level is not a ObjectId",
-        levelState: typeof levelState == 'boolean'? levelState: error.levelState = 'The levelState is wrong',
-        estado: typeof estado == 'boolean' ? estado : error.estado = 'The state is wrong',
-        imagen: typeof imagen == 'string' ? imagen: error.imagen = 'The image type is wrong' ,
-        rol: typeof rol == 'string' ? rol: error.rol = 'The rol type is wrong',
-        promedio: Number.isInteger(promedio) ? promedio : error.promedio = 'The average type is wrong'
+        nombre: String(nombre) ,
+        tipoIdentificacion: Boolean(tipoIdentificacion) ,
+        NroIdentificacion:  Number(NroIdentificacion),
+        email: String(email) ,
+        password: String(password),
+        level: level.length === 24 ?new ObjectId(level): error.level = "The level isn't a mongoid",
+        levelState: Boolean(levelState),
+        estado: Boolean(estado),
+        imagen: req.files.imagen,
+        rol: Boolean(rol),
+        promedio: Number(promedio)
     }
-
+    console.log(data);
  const errorsSize = Object.keys(error).length;
      if (errorsSize === 0 ) {
         const camper = new Camper(data);
